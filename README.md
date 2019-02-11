@@ -9,3 +9,5 @@ To build and run.
 To build and run and generate an output.
 # gdb main.exe
 To debug program.
+# g++ -std=c++11 -ggdb main.cpp -o main.exe && main.exe < input.txt > output.txt && FC output.txt expected.txt
+To test.
