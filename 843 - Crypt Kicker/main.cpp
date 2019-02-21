@@ -37,10 +37,14 @@ int main(){
                     bool consistant = true;
                     for(int i=0; (i<word.size()) && consistant;i++){
                         if(matchings.count(encrypted[i]) && matchings[encrypted[i]] != word[i]) {
-                            // well there is inconsistency
-                            // let's just move on to the next word.
                             consistant = false;
                         }
+                    }
+                    if(!consistant) continue;
+                    // if consistant we check the letters that weren't in matchings and add them, 
+                    // also write them to the list that will be used when we remove them from matchings in case when no matching is found.
+                    for(int i=0; i<word.size();i++){
+                        matchings[encrypted[i]] = word[i];
                     }
                 }
             }
