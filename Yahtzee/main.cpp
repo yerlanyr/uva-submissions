@@ -1,4 +1,5 @@
 #include<sstream>
+#include<iterator>
 #include<functional> 
 #include<map>
 #include<cassert>
@@ -74,6 +75,7 @@ int getScore(int category, vector<int> cube){
                 }
             }
             return res;
+        
     }
 }
 vector<int> getHighestScore(vector<vector<int> > cubes){
@@ -117,48 +119,6 @@ vector<int> getHighestScore(vector<vector<int> > cubes){
     return subProblema(((1<<13) - 1), 12);
 }
 int main(){
-   /* assert(getScore(0, {1,2,1,1,2}) == 3);
-    assert(getScore(1, {1,2,1,1,2}) == 4);
-    assert(getScore(2, {1,2,1,1,2}) == 0);
-    assert(getScore(2, {1,2,3,1,3}) == 6);
-    assert(getScore(4, {1,2,5,1,2}) == 5);
-    assert(getScore(5, {1,2,6,6,2}) == 12);
-    assert(getScore(6, {1,2,1,1,2}) == 7);
-    assert(getScore(7, {1,1,1,2,3}) == getScore(6, {1,1,1,2,3}));
-    assert(getScore(7, {1,1,2,2,3}) == 0);
-    assert(getScore(8, {1,1,1,1,3}) == getScore(6, {1,1,1,1,3}));
-    assert(getScore(8, {1,1,2,2,3}) == 0);
-    assert(getScore(9, {1,1,1,1,1}) == 50);
-    assert(getScore(9, {1,1,2,1,1}) == 0);
-    assert(getScore(10, {1,2,3,4,1}) == 25);
-    assert(getScore(10, {1,2,3,3,1}) == 0);
-    assert(getScore(11, {1,2,3,4,5}) == 35);
-    assert(getScore(11, {1,2,3,3,1}) == 0);
-    assert(getScore(12, {1,1,3,3,1}) == 40);
-    assert(getScore(12, {1,1,1,1,1}) == 40);
-    assert(getScore(12, {2,1,1,1,1}) == 0);
-    assert(getCount({1,2,3,5,5})[5] == 2);
-    vector<vector<int> > cubes = {
-        {1, 1, 1, 1, 1},
-        {6, 6, 6, 6, 6},
-        {6, 6, 6, 1, 1},
-        {1, 1, 1, 2, 2},
-        {1, 1, 1, 2, 3},
-        {1, 2, 3, 4, 5},
-        {1, 2, 3, 4, 6},
-        {6, 1, 2, 6, 6},
-        {1, 4, 5, 5, 5},
-        {5, 5, 5, 5, 6},
-        {4, 4, 4, 5, 6},
-        {3, 1, 3, 6, 3},
-        {2, 2, 2, 4, 6}
-    };
-    auto res = getHighestScore(cubes);
-    vector<int> exp = {3, 6, 9, 12, 15, 30, 21, 20, 26, 50, 25, 35, 40, 35, 327};
-    for(int i=0;i<res.size();i++){
-        cout << res[i] << ' ';
-    }
-    assert(res == exp);*/
     int t = 0;
     cin >> t;
     cin.ignore();
@@ -172,10 +132,12 @@ int main(){
         for(int i=0;i<5;i++) ss >> cube[i];
         cubes.push_back(cube);
         if(cubes.size() == 13){
-            for(auto x : getHighestScore(cubes)){
-                cout << x << ' ';
-            }
-            cout << endl;
+            bool first = true;
+            ostringstream result;
+            ostream_iterator<int> oit(result, " ");
+            auto highestScore = getHighestScore(cubes);
+            copy(highestScore.begin(), highestScore.end(), oit);
+            cout << result.str().substr(0, result.str().length() - 1) << endl;
             cubes.clear();
         }
     }
