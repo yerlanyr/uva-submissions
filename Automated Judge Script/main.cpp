@@ -2,27 +2,26 @@
 #include<cctype>
 #include<iostream>
 #include<sstream>
-
 using namespace std;
-string getLines(){
-    vector<string> res;
-    ostringstream ss;
-    int k;
-    cin >> k;
-    for(int i=0;i<k;i++)
-    {
-        string str;
-        getline(cin, str);
-        res.push_back(str);
-        cin.ignore();
-    }
-    return ss.str();
-}
+
 long long addToHash(long long currentHash, char ch){
+    // the possibility of a collision is estimated z / p ~ 0.03 %
     long long p = 1000969;
     long long z = 283;
     return ((int)ch % z + currentHash * z) % p;
 }
+long long evalHash(string input, bool (*predicate)(char))
+{
+    long long result = 0;
+    for(char x : input){
+        if(predicate(x)) result = addToHash(result, x);
+    }
+    return result;
+}
+bool isdigitf(char x){ return isdigit(x); }
+bool isnotdigit(char x){ return !isdigit(x); }
+bool truef(char x) { return true; }
+
 int main() 
 {
 
@@ -34,25 +33,19 @@ int main()
         if(k == 0) {
             break;
         }
-        long long cnh=0, snh=0, cuh=0, suh=0, coh = 0, soh = 0; // correct/solution number/unumeric hashes
+        long long cnh=0, snh=0, cuh=0, suh=0, coh = 0, soh = 0; // correct/solution number/unumeric/overall hashes
+        ostringstream ss;
         for(int i=0;i<k;i++)
         {
             string str;
             getline(cin, str);
-            for(char ch: str)
-            {
-                coh = addToHash(coh, ch);
-                if(isdigit(ch))
-                {
-                    cnh = addToHash(cnh, ch);
-                } else { 
-                    cuh = addToHash(cuh, ch);
-                }
-            }
-
-            cuh = addToHash(cuh, '\n');
-            coh = addToHash(coh, '\n');
+            ss << str << endl;
         }
+
+        cnh = evalHash(ss.str(), &isdigitf);
+        cuh = evalHash(ss.str(), &isnotdigit);
+        coh = evalHash(ss.str(), &truef);
+        ss.str("");
         cin >> k;
         cin.ignore(100, '\n');
         if(k == 0) 
@@ -64,22 +57,11 @@ int main()
         {
             string str;
             getline(cin, str);
-            for(char ch: str)
-            {
-                soh = addToHash(soh, ch);
-
-                if(isdigit(ch))
-                {
-                    snh = addToHash(snh, ch);
-                } 
-                else 
-                { 
-                    suh = addToHash(suh, ch);
-                }
-            }
-            soh = addToHash(soh, '\n');
-            suh = addToHash(suh, '\n');
+            ss << str << endl;
         }
+        snh = evalHash(ss.str(), &isdigitf);
+        suh = evalHash(ss.str(), &isnotdigit);
+        soh = evalHash(ss.str(), &truef);
         if(soh == coh && suh == cuh && snh == cnh){
             cout << "Run #" << n << ": Accepted"<< endl;
         } else if (snh == cnh){
